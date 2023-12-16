@@ -1,0 +1,13 @@
+
+        {
+            "field":"value",
+            "array":[1,2,3],
+            "float":2.23,
+            "null":null,
+            "true":true,
+            "false":false,
+            "obj":{
+                "field":"value"
+            }
+        }
+    
