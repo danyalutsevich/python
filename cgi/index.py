@@ -4,8 +4,48 @@
 # envs = os.environ
 
 
+def query_parser(query: str):
+    result = {}
+    key_value = query.split("&")
+
+    for el in key_value:
+        kw = el.split("=")
+        result[kw[0]] = kw[1]
+    return result
+
+
 def app(environ, start_response):
+    # print(environ)
+    print("Before parse: ", environ["QUERY_STRING"])
+    print("After: ", query_parser(environ["QUERY_STRING"]))
+
+    param = [
+        "REQUEST_URI",
+        "QUERY_STRING",
+        "REQUEST_METHOD",
+        "REMOTE_ADDR",
+        "REQUEST_SCHEME",
+    ]
+
     start_response("200 OK", [("Content-type", "text/html")])
     return [
-        b"<html><head><title>Simple CGI App</title></head><body><h1>Hello, CGI World!</h1><p>This is a simple CGI application.</p></body></html>"
+        bytes(
+            f"""
+            <!DOCTYPE html>
+            <html lang="en">
+              <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>CGI</title>
+              </head>
+              <body>
+                <h1>CGI works</h1>
+                <ul>
+                    {"".join(f"<li>{k} = {environ[k]}</li>" for k in param)}
+                </ul>
+              </body>
+            </html>
+            """,
+            "UTF-8",
+        )
     ]
