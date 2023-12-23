@@ -1,7 +1,6 @@
 #!/usr/local/bin/python3
-
-# import os
-# envs = os.environ
+import mysql.connector
+import json
 
 
 def query_parser(query: str):
@@ -14,10 +13,14 @@ def query_parser(query: str):
     return result
 
 
+def show_databases():
+    pass
+
+
 def app(environ, start_response):
-    # print(environ)
-    print("Before parse: ", environ["QUERY_STRING"])
-    print("After: ", query_parser(environ["QUERY_STRING"]))
+    # print(json.dumps(environ, indent=2))
+    # print("Before parse: ", environ["QUERY_STRING"])
+    # print("After: ", query_parser(environ["QUERY_STRING"]))
 
     param = [
         "REQUEST_URI",
