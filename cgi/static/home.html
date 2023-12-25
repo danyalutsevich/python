@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CGI</title>
+  </head>
+  <body>
+    <h1>CGI Databases</h1>
+    <code>headers</code>
+    <ul>
+        {"".join(f"<li>{d}</li>" for d in dbs)}
+    </ul>
+
+
+    <h1>CGI Headers</h1>
+    <ul>
+        {"".join(f"<li>{k} = {environ[k]}</li>" for k in param)}
+    </ul>
+  </body>
+</html>

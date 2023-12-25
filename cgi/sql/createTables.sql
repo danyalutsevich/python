@@ -1,1 +1,0 @@
-Create Table user (id INT, email VARCHAR(255),password VARCHAR(30));
