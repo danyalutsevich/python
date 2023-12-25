@@ -1,10 +1,8 @@
 import mysql.connector
 
-db_credentials = {"host": "127.0.0.1", "user": "danlutsevich", "database": "mysql"}
+db_credentials = {"host": "127.0.0.1", "user": "danlutsevich", "database": "python"}
 try:
-    connection = mysql.connector.connect(
-        **db_credentials
-    )
+    connection = mysql.connector.connect(**db_credentials)
 
     if connection.is_connected():
         print("Connection OK")
