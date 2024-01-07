@@ -4,6 +4,7 @@ import sys
 import importlib
 import appsettings
 import uuid
+import json
 import time
 
 sys.path.append(appsettings.CONTROLLERS_PATH)
@@ -12,6 +13,10 @@ sys.path.append(appsettings.CONTROLLERS_PATH)
 
 class MainHandler(BaseHTTPRequestHandler):
     sessions = dict()
+
+    # def __init__(self):
+    # self.load_sessions()
+    # print(self.sessions)
 
     def send_file(self, path):
         if ".." in path:
@@ -78,23 +83,21 @@ class MainHandler(BaseHTTPRequestHandler):
         )
         print(self.cookies)
 
-        # if 'session-id' in self.cookies:
-        #     session_id = self.cookies['session-id']
-        #     if session_id in MainHandler.sessions:
-        #         self.session = MainHandler.sessions[session_id]
-        #     else:
-                
+        session_id = (
+            self.cookies["session-id"]
+            if "session-id" in self.cookies
+            else str(uuid.uuid1())
+        )
+        if not session_id in MainHandler.sessions:
+            MainHandler.sessions[session_id] = {
+                "timestamp": time.time(),
+                "session-id": session_id,
+            }
+            self.response_headers["Set-Cookie"] = f"session-id={session_id}"
 
-        # if self.session == None:
-        #     session_id = str(uuid.uuid1())
-        #     MainHandler.sessions[session_id] = {
-        #         'timestamp':time.time(),
-        #         'session-id':session_id
-        #     }
+        self.session = MainHandler.sessions[session_id]
 
-        # self.session
-
-        # self.response_headers["Set-Cookie"] = "session-id=2342"
+        print(self.session)
 
         file = self.send_file(appsettings.PUBLIC_PATH + self.path)
         if file:
@@ -114,12 +117,27 @@ class MainHandler(BaseHTTPRequestHandler):
         self.wfile.write(b"Requested content dont exist")
 
 
+def load_sessions():
+    print("Loading sessions")
+    with open(appsettings.SESSIONS_FILE_PATH, "r") as file:
+        loaded = json.load(file)
+        print(loaded)
+
+
+def save_sessions(sessions):
+    print("Saving sessions")
+    with open(appsettings.SESSIONS_FILE_PATH, "w") as file:
+        json.dump(sessions, file)
+
+
 def main():
+    load_sessions()
     server = HTTPServer(("127.0.0.1", 4343), MainHandler)
     try:
         print("Starting server on http://127.0.0.1:4343")
         server.serve_forever()
     except:
+        save_sessions(MainHandler.sessions)
         print("Server stoped")
 
 
